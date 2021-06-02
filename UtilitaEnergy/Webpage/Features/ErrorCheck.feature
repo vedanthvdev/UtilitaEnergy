@@ -1,27 +1,42 @@
-﻿Feature: ErrorCheck
+﻿Feature: Web Test
 
-Scenario Outline: Have a question about your install?
-	Given the website <url> has loaded
-	When user clicks on Help 
-	Then Help screen 'https://utilita.co.uk/help' will load
-	When user clicks Manage your install
-	Then Manage your install screen will load
-	When user clicks 'Installation'
-	Then installing your Smart Meter screen will show
-	When user clicks 'Send us an email'
-	Then Manage your install drop down will open
-	When user clicks 'Have a question about your install?'
-	Then contact form will load
-	When user chooses 'A question about my install' from the How can we help field
-	And no other details are filled out
-	And clicks Submit button
-	Then error message <ErrorMessage> will show below the field 'Title'
-	And error message <ErrorMessage> will show below the field 'First name'
-	And error message <ErrorMessage> will show below the field 'Last name'
-	And error message <ErrorMessage> will show below the field 'Address 1'
-	And error message <ErrorMessage> will show below the field 'Preferred contact method'
-	And error message <ErrorMessage> will show below the field 'Your question'
+Background: User Log in
+	Given the website 'http://automationpractice.com/index.php' has loaded
+	And User clicks on Sign in Page 
+	And enters his credentials
+	| Email                     | password |
+	| vedanth.vasudev@gmail.com | abcdef   |
+	And clicks Submit
+	Then assert he enters his home page
+
+
+Scenario Outline: Order T-shirt (and Verify in order history)
+	#Code can be used in future as the item could be changed according to user requirement
+	When User Search for <Item>
+	When User clicks on the add to cart
+	And clicks on proceed to checkout
+	When user clicks proceed to checkout
+	When user clicks on proceed to checkout
+	And Agrees to terms and condition
+	And user clicks on proceed to checkout in shipping
+	And user chooses <payment>
+	When user clicks on I confirm my order
+	Then confirm the order is complete
+	When clicked on your account
+	And navigate the order history and details
+	Then confirm the Item is present
 
 	Examples:
-	| Test                  | url                    | ErrorMessage           |
-	| Input required- Error | https://utilita.co.uk/ | This field is required |
+	| Test          | Item     | Payment   |
+	| Order T-shirt | T-shirts | bank wire |
+
+Scenario Outline: Update Personal Information(First Name)in My Accounts 
+	When clicked on your account
+	And go into personal information tab
+	And update the <firstName>
+	And Enter the <password>
+	And click save
+
+	Examples: 
+	| test | firstName | password |
+	| name | Vedanth   | abcdef   |
